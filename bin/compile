@@ -1,23 +1,9 @@
-BUILD_DIR=$1
-CACHE_DIR=$2
-ENV_DIR=$3
-VERSION_FIREFOX=82.0.3
-ARCHIVE_NAME_FIREFOX=firefox
-FILE_NAME_FIREFOX=${ARCHIVE_NAME_FIREFOX}-${VERSION_FIREFOX}.tar.bz2
-BUILDPACK_FIREFOX_PACKAGE="https://download.mozilla.org/?product=firefox-${VERSION_FIREFOX}-SSL&os=${PLATFORM}&lang=${LANG}"
-LANG=en-US
-
-
-
-# Install Firefox
-mkdir -p $CACHE_DIR
-if ! [ -e $CACHE_DIR/$FILE_NAME_FIREFOX ]; then
-  topic "Fetching Firefox package from ${BUILDPACK_FIREFOX_PACKAGE}"
-  curl $BUILDPACK_FIREFOX_PACKAGE -L -o $CACHE_DIR/$FILE_NAME_FIREFOX
-fi
-
-topic "Extracting Firefox binaries to ${BUILD_DIR}/vendor/${ARCHIVE_NAME_FIREFOX}"
-mkdir -p $CACHE_DIR/$ARCHIVE_NAME_FIREFOX
-mkdir -p $BUILD_DIR/vendor
-tar jxf $CACHE_DIR/$FILE_NAME_FIREFOX -C $CACHE_DIR
-mv $CACHE_DIR/$ARCHIVE_NAME_FIREFOX $BUILD_DIR/vendor/
+install -d -m 0755 /etc/apt/keyrings
+wget -q https://packages.mozilla.org/apt/repo-signing-key.gpg -O- | sudo tee /etc/apt/keyrings/packages.mozilla.org.asc > /dev/null
+echo "deb [signed-by=/etc/apt/keyrings/packages.mozilla.org.asc] https://packages.mozilla.org/apt mozilla main" | sudo tee -a /etc/apt/sources.list.d/mozilla.list > /dev/null
+echo '
+Package: *
+Pin: origin packages.mozilla.org
+Pin-Priority: 1000
+' | sudo tee /etc/apt/preferences.d/mozilla
+sudo apt-get update && sudo apt-get install firefox
