@@ -7,6 +7,14 @@ FILE_NAME_FIREFOX=${ARCHIVE_NAME_FIREFOX}-${VERSION_FIREFOX}.tar.bz2
 BUILDPACK_FIREFOX_PACKAGE="https://ftp.mozilla.org/pub/firefox/releases/${VERSION_FIREFOX}/linux-x86_64/en-US/firefox-${VERSION_FIREFOX}.tar.bz2"
 LANG=en-US
 
+function indent() {
+  c='s/^/       /'
+  case $(uname) in
+    Darwin) sed -l "$c";;
+    *)      sed -u "$c";;
+  esac
+}
+
 PACKAGES="
       libappindicator1
       libasound2
