@@ -39,7 +39,6 @@ PACKAGES="
       libxt6
       libxtst6
       fonts-liberation
-      packagekit-gtk3-module
     "
 if [ ! -f $CACHE_DIR/PURGED_CACHE_V1 ]; then
   echo "Purging cache"
